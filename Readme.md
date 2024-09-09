@@ -107,7 +107,6 @@ This training focuses on using Postman for API testing. We'll use the [Simple Gr
 
 ---
 
-```markdown
 # Postman Training - Day 2
 
 This training will focus on advanced testing features in Postman, including scripting, assertions, and handling different scenarios.
@@ -120,7 +119,6 @@ You can use Postman’s scripting feature to validate that the response from an 
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
 });
-```
 
 - This script checks if the status code returned by the API is 200 and will pass the test if the condition is true.
 
