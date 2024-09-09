@@ -119,7 +119,7 @@ You can use Postman’s scripting feature to validate that the response from an 
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
 });
-
+```
 - This script checks if the status code returned by the API is 200 and will pass the test if the condition is true.
 
 ## 2. Testing the Response Body with Postman Assertions
