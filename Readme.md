@@ -235,7 +235,6 @@ console.log(baseUrl); // Logs the value of baseUrl
 ```
 
 - This retrieves the value of `baseUrl` from the collection variables and logs it in the Postman console.
-```
 
 
 
