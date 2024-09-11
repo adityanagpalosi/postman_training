@@ -251,7 +251,6 @@ This training will focus on advanced Postman features, including environments, v
 
 Example of using an environment variable in the URL:
 
-```text
 {{baseUrl}}/products
 
 - You can create and manage environments in the **Environments** section of Postman.
@@ -269,9 +268,7 @@ For example, to store an API key:
 
 Example of setting an API key in the headers:
 
-```text
 Authorization: Bearer {{apiKey}}
-```
 
 ## 3. Exporting and Importing Environments
 
