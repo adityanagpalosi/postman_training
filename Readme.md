@@ -237,5 +237,202 @@ console.log(baseUrl); // Logs the value of baseUrl
 - This retrieves the value of `baseUrl` from the collection variables and logs it in the Postman console.
 
 
+Here is the complete **README.md** for Day 3, with all topics and examples fully inside the file as requested:
+
+```markdown
+# Postman Training - Day 3
+
+This training will focus on advanced Postman features, including environments, variables, collection runners, and Newman.
+
+## 1. Postman Environments and Environment Variables
+
+- Environments in Postman allow you to define variables that can be used across multiple requests.
+- Environment variables are useful for storing values such as API keys, URLs, or any other data that might change between requests or environments.
+- You can create different environments like `Development`, `Staging`, and `Production`, each containing different values for the same variables (e.g., `baseUrl`).
+
+Example of using an environment variable in the URL:
+
+```text
+{{baseUrl}}/products
+```
+
+- You can create and manage environments in the **Environments** section of Postman.
+
+## 2. Storing Secrets in Environment
+
+- Environment variables can also be used to store sensitive information such as API keys and tokens.
+- Postman provides a way to set **initial values** (shared across teams) and **current values** (local to your session). Sensitive information should be set as **current values** to keep them private.
+
+For example, to store an API key:
+
+1. Go to **Environments**.
+2. Add a new environment variable `apiKey` and set the value.
+3. Use `{{apiKey}}` in the request headers or body.
+
+Example of setting an API key in the headers:
+
+```text
+Authorization: Bearer {{apiKey}}
+```
+
+## 3. Exporting and Importing Environments
+
+- You can export an environment by selecting the **Manage Environments** option in Postman and clicking **Download** next to the environment you wish to export.
+- To import an environment, click **Import**, select the exported `.json` file, and Postman will add it to your environments.
+
+## 4. Setting, Getting, and Removing Environment Variables from Scripts
+
+You can manipulate environment variables directly from your scripts. For example, you can set, get, and remove environment variables in the **Tests** or **Pre-request Script** tabs.
+
+### Setting an Environment Variable
+
+```javascript
+pm.environment.set("token", "mySecretToken");
+```
+
+### Getting an Environment Variable
+
+```javascript
+let token = pm.environment.get("token");
+console.log(token);
+```
+
+### Removing an Environment Variable
+
+```javascript
+pm.environment.unset("token");
+```
+
+## 5. Variables Scope
+
+Postman supports variables at different scopes:
+
+- **Global**: Accessible throughout Postman.
+- **Environment**: Available to specific environments.
+- **Collection**: Variables specific to a collection.
+- **Local**: Variables specific to a request or a script.
+- **Data**: Variables used when running collections with the collection runner.
+
+## 6. Global Variables
+
+- Global variables are accessible across all environments and requests in Postman.
+- To set a global variable, use the following script:
+
+```javascript
+pm.globals.set("globalVar", "globalValue");
+```
+
+- To retrieve a global variable:
+
+```javascript
+let globalVar = pm.globals.get("globalVar");
+console.log(globalVar);
+```
+
+## 7. Running Postman Collection with Collection Runner
+
+- The Postman **Collection Runner** allows you to run all the requests in a collection.
+- To run a collection, go to **Collection Runner**, choose the collection, and click **Run**.
+- You can run collections against different environments, and with different sets of data.
+
+## 8. Collection Runner Usage Limits
+
+- Postman’s free tier has limitations on how many requests you can run with the Collection Runner.
+- If you exceed these limits, you may need to upgrade to a paid plan for more runs or consider using Newman.
+
+## 9. Scheduled Collection Runs
+
+- Postman allows you to schedule collection runs using **Postman Monitors**.
+- You can set up monitors to run collections periodically (e.g., every 5 minutes, hourly, daily).
+- Monitors can be managed from the **Monitors** tab, and you can track their performance and results.
+
+## 10. What is Newman?
+
+- **Newman** is a command-line tool that allows you to run Postman collections outside of Postman (e.g., in a CI/CD pipeline).
+- It provides a way to automate collection runs and integrates easily into build systems like Jenkins, Travis CI, or GitHub Actions.
+
+## 11. Newman Installation
+
+To install Newman, use the following command (Node.js is required):
+
+```bash
+npm install -g newman
+```
+
+## 12. Running Collection with Newman Using Collection URL
+
+You can run a collection directly from a Postman shareable URL using Newman:
+
+```bash
+newman run https://www.getpostman.com/collections/{{your-collection-id}}
+```
+
+- Replace `{{your-collection-id}}` with your actual Postman collection URL.
+
+## 13. Running Collection with Local File in Newman
+
+You can also run a local Postman collection file (in `.json` format) with Newman:
+
+```bash
+newman run /path/to/collection.json
+```
+
+- Ensure the file is exported from Postman before running the command.
+
+## 14. Specifying Environments in Newman
+
+You can specify an environment file when running a collection with Newman:
+
+```bash
+newman run /path/to/collection.json -e /path/to/environment.json
+```
+
+- This will apply the environment settings from the `.json` file to the collection run.
+
+## 15. Installing and Generating htmlextra Reports
+
+Newman can generate detailed HTML reports using the `htmlextra` reporter.
+
+1. First, install the `htmlextra` reporter:
+
+```bash
+npm install -g newman-reporter-htmlextra
+```
+
+2. Then, run a collection with the reporter:
+
+```bash
+newman run /path/to/collection.json -r htmlextra
+```
+
+- This will generate an HTML report with detailed information about the collection run.
+
+## 16. Postman Workflows - How to Change Execution Flow with `pm.execution.setNextRequest` and Skip Request
+
+You can control the flow of requests in Postman by using the `pm.execution.setNextRequest()` function.
+
+### Changing Execution Flow
+
+To change the order of execution, use the following script in the **Tests** tab of a request:
+
+```javascript
+pm.execution.setNextRequest("Next Request Name");
+```
+
+- This will make Postman skip any intermediate requests and directly execute the request with the name `"Next Request Name"`.
+
+### Skipping a Request
+
+To skip the current request and move to the next one in the collection, use:
+
+```javascript
+pm.execution.skip();
+```
+
+- This will skip the current request, and Postman will continue with the next one in sequence.
+```
+
+
+
 
 
