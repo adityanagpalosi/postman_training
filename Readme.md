@@ -239,7 +239,6 @@ console.log(baseUrl); // Logs the value of baseUrl
 
 Here is the complete **README.md** for Day 3, with all topics and examples fully inside the file as requested:
 
-```markdown
 # Postman Training - Day 3
 
 This training will focus on advanced Postman features, including environments, variables, collection runners, and Newman.
@@ -254,7 +253,6 @@ Example of using an environment variable in the URL:
 
 ```text
 {{baseUrl}}/products
-```
 
 - You can create and manage environments in the **Environments** section of Postman.
 
