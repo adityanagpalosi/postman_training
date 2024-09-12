@@ -425,9 +425,196 @@ pm.execution.skip();
 ```
 
 - This will skip the current request, and Postman will continue with the next one in sequence.
+
+
+
+
+
+# Postman Training - Day 4
+
+This section focuses on running Postman collections using **Jenkins** and **Newman**, including how to use environment variables to store sensitive information (like API keys) and generating HTML reports using the **htmlextra** reporter.
+
+## 1. Installing Jenkins
+
+### Step-by-Step Installation on Local Machine
+
+1. Download the Jenkins installer for your operating system from [Jenkins official site](https://www.jenkins.io/download/).
+2. Install Jenkins by running the installer and following the instructions for your operating system.
+3. After installation, Jenkins should start automatically. You can access it in your browser by navigating to `http://localhost:8080/`.
+4. Unlock Jenkins: You will be prompted to enter an initial admin password. This can be found in the file located at:
+   - **Windows**: `C:\Program Files (x86)\Jenkins\secrets\initialAdminPassword`
+   - **Linux/macOS**: `/var/lib/jenkins/secrets/initialAdminPassword`
+5. Install the recommended plugins and create your first admin user.
+6. Jenkins is now ready for use.
+
+## 2. Installing Newman on Jenkins
+
+1. **Install Node.js**: Newman runs on Node.js, so you need to install it first. To install Node.js on Jenkins:
+   - Go to **Manage Jenkins** > **Manage Plugins**.
+   - Select the **Available** tab and search for the **NodeJS** plugin.
+   - Install the plugin and restart Jenkins.
+2. **Install Newman and htmlextra**:
+   - On the Jenkins server (or the system where Jenkins is installed), run the following command to install Newman and the **htmlextra** reporter globally:
+     ```bash
+     npm install -g newman newman-reporter-htmlextra
+     ```
+
+## 3. Running a Postman Collection with Newman in Jenkins (Normal Job) with API Key
+
+### Step 1: Create a New Jenkins Job
+
+1. In Jenkins, click **New Item**.
+2. Enter a name for your job (e.g., "Run Postman Collection via URL") and select **Freestyle project**.
+3. Click **OK** to create the job.
+
+### Step 2: Store API Key in Jenkins Environment Variables
+
+1. Go to **Manage Jenkins** > **Configure System**.
+2. Scroll to the **Global properties** section, enable **Environment variables**.
+3. Add a new environment variable with the following details:
+   - **Name**: `POSTMAN_API_KEY`
+   - **Value**: `PMAT-01J7GQKXV77E1R0T5T5RVCZQGB` (replace with your actual API key).
+
+### Step 3: Configure the Job
+
+1. Under the **Build Environment** section, enable **Provide Node & npm bin/ folder to PATH** and select the NodeJS installation you set up earlier.
+2. Under the **Build** section, click **Add build step** and choose **Execute shell** (or **Execute Windows batch command** for Windows users).
+3. In the command section, add the following command to run your Postman collection using Newman, referencing the Jenkins environment variable for the API key, and generating the **htmlextra** report:
+
+   ```bash
+   newman run https://api.postman.com/collections/10909367-738ec187-b139-490f-a351-8b387fa52a8d?access_key=$POSTMAN_API_KEY -r htmlextra
+   ```
+
+   This command will use Newman to run the collection from the provided Postman URL, retrieve the API key from the environment variable, and generate an HTML report using the **htmlextra** reporter.
+
+### Step 4: Run the Job
+
+1. After saving, click **Build Now** to run the job.
+2. Jenkins will execute the job, and you will see the output of the Newman run in the **Console Output**.
+
+### Step 5: View the Results
+
+1. Check the **Console Output** for the test results. Newman will display details of the collection run, including any failed or passed tests.
+2. The **htmlextra** report will be generated and saved in the Jenkins workspace.
+
+## 4. Running a Postman Collection from GitHub with Newman in Jenkins (Normal Job)
+
+### Step 1: Create a New Jenkins Job
+
+1. In Jenkins, click **New Item**.
+2. Enter a name for your job (e.g., "Run Postman Collection from GitHub") and select **Freestyle project**.
+3. Click **OK** to create the job.
+
+### Step 2: Configure the Job
+
+1. Under the **Source Code Management** section, select **Git**.
+2. Enter your Git repository URL:
+   ```text
+   https://github.com/adityanagpalosi/postman_training.git
+   ```
+3. Under **Branches to build**, specify the branch you want to pull from (e.g., `master`).
+4. In the **Build Environment** section, enable **Provide Node & npm bin/ folder to PATH** and select the NodeJS installation.
+5. Under the **Build** section, click **Add build step** and choose **Execute shell** (or **Execute Windows batch command** for Windows users).
+6. Add the following command to run the Postman collection using Newman and generate the **htmlextra** report:
+
+   ```bash
+   newman run "With Environment/Grocery Store 2 With Environment.postman_collection.json" -e "With Environment/Testing.postman_environment.json" -r htmlextra
+   ```
+
+   This command tells Newman to run the Postman collection and environment files from your Git repository and generate an HTML report using **htmlextra**.
+
+7. Save the job configuration.
+
+### Step 3: Run the Job
+
+1. Click **Build Now** to run the job.
+2. Jenkins will pull the latest version of your Postman collection from GitHub and execute the collection using Newman.
+
+### Step 4: View the Results
+
+1. Check the **Console Output** for the results of the collection run.
+2. The **htmlextra** report will be generated and saved in the Jenkins workspace.
+
+## 5. Running a Postman Collection with Jenkins Pipeline Script (Using Postman URL)
+
+### Step 1: Create a New Pipeline Job
+
+1. In Jenkins, click **New Item**.
+2. Enter a name for your job (e.g., "Pipeline Postman Collection URL") and select **Pipeline**.
+3. Click **OK** to create the job.
+
+### Step 2: Define the Pipeline Script
+
+In the **Pipeline** section, add the following pipeline script:
+
+```groovy
+pipeline {
+    agent any
+    environment {
+        POSTMAN_API_KEY = credentials('POSTMAN_API_KEY')
+    }
+    stages {
+        stage('Run Postman Collection') {
+            steps {
+                sh 'newman run https://api.postman.com/collections/10909367-738ec187-b139-490f-a351-8b387fa52a8d?access_key=$POSTMAN_API_KEY -r htmlextra'
+            }
+        }
+    }
+}
 ```
 
+- This script sets up a pipeline with one stage that runs the Postman collection from the URL using Newman, retrieves the API key from the Jenkins environment variable, and generates an HTML report using **htmlextra**.
 
+### Step 3: Run the Pipeline
 
+1. Click **Build Now** to run the pipeline.
+2. Jenkins will execute the pipeline, and you can view the output in the **Pipeline Console Output**.
+
+### Step 4: View the Results
+
+1. Check the **Pipeline Console Output** for the results of the collection run.
+2. The **htmlextra** report will be generated and saved in the Jenkins workspace.
+
+## 6. Running a Postman Collection with Jenkins Pipeline Script (Using GitHub Repository)
+
+### Step 1: Create a New Pipeline Job
+
+1. In Jenkins, click **New Item**.
+2. Enter a name for your job (e.g., "Pipeline Postman GitHub") and select **Pipeline**.
+3. Click **OK** to create the job.
+
+### Step 2: Define the Pipeline Script
+
+In the **Pipeline** section, add the following pipeline script:
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/adityanagpalosi/postman_training.git'
+            }
+        }
+        stage('Run Postman Collection') {
+            steps {
+                sh 'newman run "With Environment/Grocery Store 2 With Environment.postman_collection.json" -e "With Environment/Testing.postman_environment.json" -r htmlextra'
+            }
+        }
+    }
+}
+```
+
+- This script clones the GitHub repository and then runs the collection and environment file using Newman, while generating the **htmlextra** HTML report.
+
+### Step 3: Run the Pipeline
+
+1. Click **Build Now** to run the pipeline.
+2. Jenkins will pull the Postman collection and environment files from your GitHub repository and run the collection using Newman.
+
+### Step 4: View the Results
+
+1. Check the **Pipeline Console Output** for the results of the collection run.
+2. The **htmlextra** report will be generated and saved in the Jenkins workspace
 
 
