@@ -473,7 +473,7 @@ This section focuses on running Postman collections using **Jenkins** and **Newm
 2. Scroll to the **Global properties** section, enable **Environment variables**.
 3. Add a new environment variable with the following details:
    - **Name**: `POSTMAN_API_KEY`
-   - **Value**: `PMAT-01J7GQKXV77E1R0T5T5RVCZQGB` (replace with your actual API key).
+   - **Value**: `` (replace with your actual API key).
 
 ### Step 3: Configure the Job
 
